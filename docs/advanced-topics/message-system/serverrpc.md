@@ -23,6 +23,8 @@ void Update()
 }
 ```
 
+## Postfix
+
 Marking a method with the `[ServerRpc]` attribute and putting `ServerRpc` suffix to the method name are required, otherwise it will prompt error messages:
 
 ```csharp

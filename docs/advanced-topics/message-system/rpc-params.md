@@ -73,5 +73,18 @@ void XyzwClientRpc(int framekey, ClientRpcParams clientRpcParams = default) { /*
 ```
 
 :::tip
-`ClientRpcSendParams`'s `TargetClientIds` property is a `ulong[]` which means everytime you try to specify a subset of target clients or even a single client target, you will have to allocate a `new ulong[]`. This pattern could quickly lead into lots of heap allocations and pressure GC which would cause GC spikes at runtime. We suggest developers to cache their `ulong[]` variables or use an array pool to cycle `ulong[]` instances so that it would cause less heap allocations.
+`ClientRpcSendParams`'s `TargetClientIds` property is a `ulong[]` which means every time you try to specify a subset of target clients or even a single client target, you will have to allocate a `new ulong[]`. This pattern could quickly lead into lots of heap allocations and pressure GC which would cause GC spikes at runtime. We suggest developers to cache their `ulong[]` variables or use an array pool to cycle `ulong[]` instances so that it would cause less heap allocations.
 :::
+
+## Determine what calls the RPC
+
+You can use `ServerRpcParams` and `ClientRpcParams` to locate what called the RPC. See the following example:
+
+```csharp
+[ServerRpc]
+public void MyServerRpc(int foo, string bar, ServerRpcParams rpcParams = default)
+{
+    var executingRpcSender = rpcParams.Receive.SenderClientId;
+    Debug.Log($"I received an RPC from client: {executingRpcSender}");
+}
+```
